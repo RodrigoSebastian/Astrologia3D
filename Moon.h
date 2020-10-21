@@ -6,6 +6,7 @@
 #include <math.h>
 
 //#################
+#include "Sphere.h"
 #include "Planet.h"
 #include "Moon.h"
 #include "Disk.h"
@@ -13,6 +14,8 @@
 
 class Moon {
 private:
+	Sphere* moon;
+
 	float year;
 	float day;
 	float yearInc;
@@ -28,6 +31,7 @@ private:
 	static bool seeOrbits;
 
 public:
+
 	Moon();
 	void DrawMoon();
 	void ChangeInc(float);

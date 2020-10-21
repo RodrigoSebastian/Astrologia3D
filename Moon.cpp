@@ -10,6 +10,9 @@
 #include "Disk.h"
 //###################
 
+static RGBpixmap myText[1];
+static GLuint name[1];
+
 Moon::Moon() {
 	yearInc = 0.1f;
 	dayInc = 0.5f;
@@ -22,6 +25,14 @@ Moon::Moon() {
 	initialX = 0;
 	initialY = 0;
 	initialZ = 0;
+
+	glGenTextures(1, name);
+
+	myText[0].readBMPFile((char*)"moon.bmp");
+	myText[0].SetTexture(name[0]);
+
+	moon = new Sphere(1.0);
+	moon->SetTexture(&name[0]);
 }
 
 void Moon::DrawMoon() {
@@ -31,7 +42,7 @@ void Moon::DrawMoon() {
 	glRotatef((GLfloat)year, 0.0, 1.0, 0.0);
 	glTranslated(initialX, initialY, initialZ);
 	glRotatef((GLfloat)day, 0.0, 1.0, 0.0);
-	glutSolidSphere(1.0, 50, 50);
+	moon->HaSolidSphere();
 	glPopMatrix();
 
 	if (doAuto) {
@@ -53,6 +64,7 @@ bool Moon::doAuto = false;
 void Moon::SeeOrbits(bool _seeOrbits) {
 	seeOrbits = _seeOrbits;
 }
+
 bool Moon::seeOrbits = false;
 
 void Moon::InitialPos(float _initialX, float _initialY, float _initialZ) {

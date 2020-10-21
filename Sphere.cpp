@@ -3,14 +3,36 @@
 #include <string.h>
 #include <glut.h>
 #include <math.h>
-#include "Sphere.h"
+#include <fstream>
+#include <iostream>
+#include <stdio.h>
 
-Sphere::Sphere(float _r) {
-	radius = _r;
-}
+//##################
+#include "Sphere.h"
+#include "mRGB.h"
+//##################
+
+using namespace std;
 
 Sphere::Sphere() {
 	radius = 1;
+	glGenTextures(1, &name);
+}
+
+Sphere::Sphere(float _r) {
+	radius = _r;
+	glGenTextures(1, &name);
+}
+
+void Sphere::SetTexture(char* fname) {
+	texture = 1;
+	myText[0].readBMPFile(fname);
+	myText[0].SetTexture(name);
+}
+
+void Sphere::SetTexture(GLuint *name) {
+	texture = 2;
+	paramName = name;
 }
 
 void Sphere::SetSpeedAndTranslation(float _speed, float t0, float t1, float t2) {
@@ -39,7 +61,7 @@ void Sphere::LogicSphere() {
 }
 
 void Sphere::DoRotation() {
-	//year = (GLfloat)(((GLint)(year * 100.f + speed * 100.f)) % 36000) / 100.0f;
+	glRotated(67, 0.0, 0.0, 1.0);
 	year += speed / 360;
 	if (year >= 360)
 		year -= 360;
@@ -54,21 +76,38 @@ void Sphere::HaSolidSphere() {
 		glPushMatrix();
 		DoRotation();
 		glTranslated(translate[0], translate[1], translate[2]);
+
+		if (texture == 1) {
+			glEnable(GL_TEXTURE_2D);
+			glBindTexture(GL_TEXTURE_2D, name);
+		}
+		else if (texture == 2) {
+			glEnable(GL_TEXTURE_2D);
+			glBindTexture(GL_TEXTURE_2D, *paramName);
+		}
+
+		glBegin(GL_TRIANGLES);
 		for (int i = 0; i < slices; i++)
 			for (int j = 0; j < stacks; j++) {
-					glBegin(GL_TRIANGLES);
-						glColor3f(1.0, 1.0, 1.0);
-						glVertex3fv(points[i][j]);
-						glVertex3fv(points[i + 1][j]);
-						glVertex3fv(points[i + 1][j + 1]);
-					glEnd();
-					glBegin(GL_TRIANGLES);
-						glColor3f(0.5, 0.5, 0.5);
-						glVertex3fv(points[i + 1][j + 1]);
-						glVertex3fv(points[i][j + 1]);
-						glVertex3fv(points[i][j]);
-					glEnd();
+
+					glColor3f(1.0, 1.0, 1.0);
+				glTexCoord2f((float)i / (float)slices, (float)j / (float)stacks);
+					glVertex3fv(points[i][j]);
+				glTexCoord2f((float)(i + 1) / (float)slices, (float)j / (float)stacks);
+					glVertex3fv(points[i + 1][j]);
+				glTexCoord2f((float)(i + 1) / (float)slices, (float)(j + 1) / (float)stacks);
+					glVertex3fv(points[i + 1][j + 1]);
+					
+					glColor3f(0.5, 0.5, 0.5);
+				glTexCoord2f((float)(i + 1) / (float)slices, (float)(j + 1) / (float)stacks);
+					glVertex3fv(points[i + 1][j + 1]);
+				glTexCoord2f((float)(i) / (float)slices, (float)(j + 1) / (float)stacks);
+					glVertex3fv(points[i][j + 1]);
+				glTexCoord2f((float)(i) / (float)slices, (float)(j) / (float)stacks);
+					glVertex3fv(points[i][j]);
 			}
+		glEnd();
+		glDisable(GL_TEXTURE_2D);
 		glPopMatrix();
 	}
 }
