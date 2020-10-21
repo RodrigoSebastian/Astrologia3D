@@ -13,6 +13,12 @@
 static RGBpixmap myText[1];
 static GLuint name[1];
 
+void Moon::SetTexture(char * file) {
+	glGenTextures(1, name);
+	myText[0].readBMPFile(file);
+	myText[0].SetTexture(name[0]);
+}
+
 Moon::Moon() {
 	yearInc = 0.1f;
 	dayInc = 0.5f;
@@ -25,11 +31,6 @@ Moon::Moon() {
 	initialX = 0;
 	initialY = 0;
 	initialZ = 0;
-
-	glGenTextures(1, name);
-
-	myText[0].readBMPFile((char*)"moon.bmp");
-	myText[0].SetTexture(name[0]);
 
 	moon = new Sphere(1.0);
 	moon->SetTexture(&name[0]);

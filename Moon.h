@@ -31,9 +31,9 @@ private:
 	static bool seeOrbits;
 
 public:
-
 	Moon();
 	void DrawMoon();
+	static void SetTexture(char*);
 	void ChangeInc(float);
 	void InitialPos(float, float, float);
 	void Space(float);
