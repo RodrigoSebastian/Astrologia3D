@@ -9,10 +9,11 @@
 #include "Planet.h"
 #include "Moon.h"
 #include "Disk.h"
+#include "Cubemap.h"
 //#######################
 
 					//    Separación	    Coordenas random
-Planet planets[8];  //    con el sol	 sobre la circunferencia                       
+Planet planets[1];  //    con el sol	 sobre la circunferencia                       
 float posInicial[8][3] = { {08.0,			0.0,		0.0},
 							{11.0,			0.0,		0.0},
 							{15.0,			0.0,		0.0},
@@ -24,6 +25,8 @@ float posInicial[8][3] = { {08.0,			0.0,		0.0},
 
 static bool doAuto = false;
 static bool seeOrbits = false;
+Cubemap universe(5);
+Sphere sun(5.0);
 
 //Asignar coordenadas random dentro de sus orbitas
 void reColocar() {
@@ -36,18 +39,38 @@ void reColocar() {
 
 void init(void)
 {
-	glClearColor(0.0, 0.0, 0.0, 0.0);
+	glClearColor(0.5, 0.5, 0.5, 0.0);
 	glShadeModel(GL_SMOOTH);
 	glEnable(GL_DEPTH_TEST);
 
+	sun.SetTexture((char*) "earth.bmp");
+	universe.SetTexture((char*)"universe.bmp");
+
 	planets[0] = Planet(0, 0, 0.6, 0.15f, 0.25f);
+	planets[0].SetTexture((char*) "mercury.bmp");
+
 	planets[1] = Planet(1, 0, 1.0, 0.13f, 0.23f);
-	planets[2] = Planet(0, 0, 0.8, 0.11f, 0.21f);
+	planets[1].SetTexture((char*) "venus.bmp");
+
+	planets[2] = Planet(1, 0, 0.8, 0.11f, 0.21f);
+	planets[2].SetTexture((char*) "earth.bmp");
+	
 	planets[3] = Planet(2, 0, 0.75, 0.09f, 0.19f);
+	planets[3].SetTexture((char*) "mars.bmp");
+	
 	planets[4] = Planet(5, 0, 2.5, 0.07f, 0.17f);
+	planets[4].SetTexture((char*) "jupiter.bmp");
+
 	planets[5] = Planet(2, 1, 2.0, 0.05f, 0.15f);
+	planets[5].SetTexture((char*) "saturn.bmp");
+
 	planets[6] = Planet(2, 0, 1.2, 0.03f, 0.13f);
+	planets[6].SetTexture((char*) "uranus.bmp");
+
 	planets[7] = Planet(1, 0, 0.8, 0.02f, 0.11f);
+	planets[7].SetTexture((char*) "neptune.bmp");
+
+	cout << glGetString(GL_VERSION) << " |*This project was encoded over OpenGL 4.6.0*|";
 
 	reColocar();
 }
@@ -55,12 +78,11 @@ void init(void)
 void display(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-
 	glPushMatrix();
+	universe.Draw();
 	glRotated(22.0, 0.0, 0.0, 1.0);
 	glColor3f(1.0, 1.0, 0.0);
-	glutSolidSphere(5.0, 40, 40);
+	sun.HaSolidSphere();
 
 	for (int i = 0; i < 8; i++) {
 		switch (i) {
@@ -102,11 +124,11 @@ void reshape(int w, int h)
 	glViewport(0, 0, (GLsizei)w, (GLsizei)h);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(60.0, (GLfloat)w / (GLfloat)h, 1.0, 100.0);
+	gluPerspective(60.0, (GLfloat)w / (GLfloat)h, 1.0, 500.0);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	gluLookAt(0.0, 40.0, 55.0, 0.0, -9.0, 0.0, 0.0, 1.0, 1.0);
+	gluLookAt(0.0, 35.0, 55.0, 0.0, -9.0, 0.0, 0.0, 1.0, 1.0);
 }
 
 void keyboard(unsigned char key, int x, int y)
@@ -169,12 +191,11 @@ void mouse(int btn, int state, int x, int y)
 
 int main(int argc, char** argv)
 {
-
 	srand(time(NULL));
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
-	glutInitWindowSize(500, 500);
+	glutInitWindowSize(1280, 720);
 	glutInitWindowPosition(100, 100);
 	glutCreateWindow("Solar System Example");
 	init();
