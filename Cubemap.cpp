@@ -30,14 +30,14 @@ void Cubemap::Draw() {
 		glBegin(GL_QUADS);
 
 			glColor3f(1.0, 1.0, 1.0);
-			glTexCoord2f(0.0, 0.0);
-			glVertex3f(-230, -250, -150);
-			glTexCoord2f(1.0, 0.0);
-			glVertex3f(230, -250, -150);
-			glTexCoord2f(1.0, 1.0);
-			glVertex3f(230, 120, -150);
-			glTexCoord2f(0.0, 1.0);
-			glVertex3f(-230, 120, -150);
+		glTexCoord2f(0.0, 0.0);
+			glVertex3f(-750,	-250,	-450);
+		glTexCoord2f(1.0, 0.0);
+			glVertex3f(750,		-250,	-450);
+		glTexCoord2f(1.0, 1.0);
+			glVertex3f(750,		 520,	-450);
+		glTexCoord2f(0.0, 1.0);
+			glVertex3f(-750,	 520,	-450);
 
 		glEnd();
 		glDisable(GL_TEXTURE_2D);

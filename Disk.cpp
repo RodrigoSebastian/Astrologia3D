@@ -29,7 +29,7 @@ void Disk::DrawDisk() {
 	glScaled(1.0, 0.01, 1.0);
 	glRotated(90.0, 1.0, 0.0, 0.0);
 	//glutWireTorus(0.15, 0.3, 10, 10);
-	glutSolidTorus(.7, space + .3, 10, 30);
+	glutSolidTorus(.7, space + .2, 30, 30);
 	glPopMatrix();
 }
 

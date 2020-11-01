@@ -52,6 +52,10 @@ void Moon::DrawMoon() {
 	}
 }
 
+bool Moon::doAuto = false;
+
+bool Moon::seeOrbits = false;
+
 void Moon::ChangeInc(float _inc) {
 	yearInc += _inc;
 	dayInc += _inc;
@@ -60,13 +64,10 @@ void Moon::ChangeInc(float _inc) {
 void Moon::DoAuto(bool _doAuto) {
 	doAuto = _doAuto;
 }
-bool Moon::doAuto = false;
 
 void Moon::SeeOrbits(bool _seeOrbits) {
 	seeOrbits = _seeOrbits;
 }
-
-bool Moon::seeOrbits = false;
 
 void Moon::InitialPos(float _initialX, float _initialY, float _initialZ) {
 	initialX = _initialX;

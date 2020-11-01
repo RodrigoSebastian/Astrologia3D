@@ -57,11 +57,12 @@ void Sphere::LogicSphere() {
 			points[i][j][2] = z;
 		}
 	}
+	//LogicNormals();
 	finishCalc = true;
 }
 
 void Sphere::DoRotation() {
-	glRotated(67, 0.0, 0.0, 1.0);
+	glRotated(90, 0.0, 1.0, 1.0);
 	year += speed / 360;
 	if (year >= 360)
 		year -= 360;
@@ -91,19 +92,31 @@ void Sphere::HaSolidSphere() {
 			for (int j = 0; j < stacks; j++) {
 
 					glColor3f(1.0, 1.0, 1.0);
+
 				glTexCoord2f((float)i / (float)slices, (float)j / (float)stacks);
+					glNormal3fv(points[i][j]);
 					glVertex3fv(points[i][j]);
+
 				glTexCoord2f((float)(i + 1) / (float)slices, (float)j / (float)stacks);
+					glNormal3fv(points[i + 1][j]);
 					glVertex3fv(points[i + 1][j]);
+
 				glTexCoord2f((float)(i + 1) / (float)slices, (float)(j + 1) / (float)stacks);
+					glNormal3fv(points[i + 1][j + 1]);
 					glVertex3fv(points[i + 1][j + 1]);
 					
 					glColor3f(0.5, 0.5, 0.5);
+
 				glTexCoord2f((float)(i + 1) / (float)slices, (float)(j + 1) / (float)stacks);
+					glNormal3fv(points[i + 1][j + 1]);
 					glVertex3fv(points[i + 1][j + 1]);
+
 				glTexCoord2f((float)(i) / (float)slices, (float)(j + 1) / (float)stacks);
+					glNormal3fv(points[i][j + 1]);
 					glVertex3fv(points[i][j + 1]);
+
 				glTexCoord2f((float)(i) / (float)slices, (float)(j) / (float)stacks);
+					glNormal3fv(points[i][j]);
 					glVertex3fv(points[i][j]);
 			}
 		glEnd();

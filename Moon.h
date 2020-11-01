@@ -33,10 +33,12 @@ private:
 public:
 	Moon();
 	void DrawMoon();
-	static void SetTexture(char*);
+
 	void ChangeInc(float);
 	void InitialPos(float, float, float);
 	void Space(float);
+
 	static void DoAuto(bool);
 	static void SeeOrbits(bool);
+	static void SetTexture(char*);
 };

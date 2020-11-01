@@ -12,7 +12,6 @@ typedef unsigned char uchar;
 class Cubemap
 {
 private:
-
 	RGBpixmap myText[1];
 	GLuint name;
 	float size = 150;

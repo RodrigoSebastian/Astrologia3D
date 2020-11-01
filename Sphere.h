@@ -23,17 +23,19 @@ private:
 	float radius = 1;
 	float speed = 0.05;
 	float year;
-	float translate[3] = {0.0, 0.0, 0.0};
+	float translate[3] = { 0.0, 0.0, 0.0 };
 	float points[15 + 1][15 + 1][3];
+	float normals[15 + 1][15 + 1][3];
 
 	int stacks = 15;
 	int slices = 15;
-
-	bool finishCalc = false;
 	int texture = 0;
 
-	void LogicSphere();
+	bool finishCalc = false;
+
 	void DoRotation();
+	void LogicSphere();
+	//void LogicNormals();
 
 	float Map(float value, float start1, float stop1, float start2, float stop2) {
 		return start2 + (stop2 - start2) * ((value - start1) / (stop1 - start1));

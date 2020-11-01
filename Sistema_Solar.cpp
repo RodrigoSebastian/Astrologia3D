@@ -11,23 +11,31 @@
 #include "Disk.h"
 #include "Cubemap.h"
 #include "RGBpixmap.h"
+#include "Asteroid.h"
+#include "Lights.h"
 //#######################
 
 					//    Separación	    Coordenas random
-Planet planets[1];  //    con el sol	 sobre la circunferencia                       
-float posInicial[8][3] = { {08.0,			0.0,		0.0},
-							{11.0,			0.0,		0.0},
-							{15.0,			0.0,		0.0},
-							{19.0,			0.0,		0.0},
-							{24.0,			0.0,		0.0},
-							{31.0,			0.0,		0.0},
-							{35.0,			0.0,		0.0},
-							{39.0,			0.0,		0.0} };
+Planet planets[1];  //    con el sol	 sobre la circunferencia    
+Asteroid* asteroids[10];
+Lights* lightConfig;
+
+float asteroidRing = 12;
+float posInicial[8][3] = { {14.0,			0.0,		0.0},
+							{21.0,			0.0,		0.0},
+							{30.0,			0.0,		0.0},
+							{39.0,			0.0,		0.0},
+							{48.0,			0.0,		0.0},
+							{59.0,			0.0,		0.0},
+							{70.0,			0.0,		0.0},
+							{80.0,			0.0,		0.0} };
 
 static bool doAuto = false;
 static bool seeOrbits = false;
 Cubemap universe(5);
 Sphere sun(5.0);
+float lightEmission[4] = { 1.0, 1.0, 0.0, 1.0 };
+float black[4] = { 0.0, 0.0, 0.0, 1.0 };
 
 //Asignar coordenadas random dentro de sus orbitas
 void reColocar() {
@@ -40,13 +48,18 @@ void reColocar() {
 
 void init(void)
 {
-	glClearColor(0.5, 0.5, 0.5, 0.0);
+	//################## LIGHTS #####################
+	lightConfig = new Lights(0.0, 0.0, 0.0, 0.901, 0.513, 0.078);
+
+	glClearColor(0.0, 0.0, 0.0, 0.0);
 	glShadeModel(GL_SMOOTH);
 	glEnable(GL_DEPTH_TEST);
 
+	//##################### MAIN PLANETS ###############################
+
 	Moon::SetTexture((char*)"res/moon.bmp");
-	sun.SetTexture((char*) "res/earth.bmp");
-	universe.SetTexture((char*)"res/universe.bmp");
+	sun.SetTexture((char*) "res/sun.bmp");
+	//universe.SetTexture((char*)"res/universe.bmp");
 
 	planets[0] = Planet(0, 0, 0.6, 0.15f, 0.25f);
 	planets[0].SetTexture((char*) "res/mercury.bmp");
@@ -75,6 +88,14 @@ void init(void)
 	cout << glGetString(GL_VERSION) << " |*This project was encoded over OpenGL 4.6.0*| ";
 
 	reColocar();
+
+	//################## ASTEROIDS ##################
+	Asteroid::SetTexture((char*)"res/asteroid.bmp");
+
+	for (int i = 0; i < 10; i++) {
+		float angulo = 1 + rand() % 360;
+		asteroids[i] = new Asteroid(asteroidRing, cos(angulo) * asteroidRing, sin(angulo) * asteroidRing);
+	}
 }
 
 void display(void)
@@ -82,15 +103,22 @@ void display(void)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glPushMatrix();
 
-		universe.Draw();
+		//universe.Draw();
 
 		glRotated(22.0, 0.0, 0.0, 1.0);
-		glColor3f(1.0, 1.0, 0.0);
-	
-		sun.HaSolidSphere();
+		//glColor3f(1.0, 1.0, 0.0);
+
+		glPushMatrix();
+			glMaterialfv(GL_FRONT, GL_EMISSION, lightEmission);
+			//glutSolidSphere(0.9, 15, 15);
+			sun.HaSolidSphere();
+			glMaterialfv(GL_FRONT, GL_EMISSION, black);
+		glPopMatrix();
 
 		for (int i = 0; i < 8; i++)
 			planets[i].DrawPlanet(posInicial[i][0], posInicial[i][1], posInicial[i][2]);
+		for (int i = 0; i < 10; i++)
+			asteroids[i]->Draw();
 
 	glPopMatrix();
 
@@ -102,11 +130,12 @@ void reshape(int w, int h)
 	glViewport(0, 0, (GLsizei)w, (GLsizei)h);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(60.0, (GLfloat)w / (GLfloat)h, 1.0, 500.0);
+	gluPerspective(60.0, (GLfloat)w / (GLfloat)h, 1.0, 1080.0);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	gluLookAt(0.0, 35.0, 55.0, 0.0, -9.0, 0.0, 0.0, 1.0, 1.0);
+	gluLookAt(0.0, 35.0, 105.0, 0.0, -9.0, 0.0, 0.0, 1.0, 1.0);
+	//gluLookAt(0.0, 5.0, 15.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0);
 }
 
 void keyboard(unsigned char key, int x, int y)
@@ -175,7 +204,7 @@ int main(int argc, char** argv)
 	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
 	glutInitWindowSize(1280, 720);
 	glutInitWindowPosition(100, 100);
-	glutCreateWindow("3D Astrology");
+	glutCreateWindow("3D Astrology Project");
 	init();
 
 	glutMouseFunc(mouse);
